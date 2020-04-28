@@ -28,7 +28,7 @@ export const MapContainer = ({region, getInputData, toggleSearchResultModal, get
                 toggleSearchResultModal={toggleSearchResultModal}
                 getAddressPredictions={getAddressPredictions}
             />
-            {  (resultTypes.pickUp || resultTypes.dropOff) && 
+            {  (resultTypes.pickUp || resultTypes.dropOff) && (predictions.length >=1) &&
             
             <SearchResult predictions={predictions}/>   //err         
             }

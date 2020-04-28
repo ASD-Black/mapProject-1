@@ -1,24 +1,19 @@
-import React, { Component } from "react";
-//import {Text} from "react-native";
+import React from "react";
 import {Text} from "react-native";
-
-import { List, ListItem, View, Left, Body} from 'native-base'
-
-
+import { View, List, ListItem, Left, Body } from "native-base";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import styles from "./SearchResultsStyles.js";
 
 export const SearchResults = ({predictions})=> {
-	
 		return(
-			<View style={styles.searchResultsWrapper}> 
-				<List // err
+			<View style={styles.searchResultsWrapper} >
+				<List 
 					dataArray={predictions}
-					renderItem={(item)=>
+					renderRow={(item)=>
 						<View>
-							<ListItem >
+							<ListItem button avatar>
 								<Left style={styles.leftContainer}>
 									<Icon style={styles.leftIcon} name="location-on" />
 								</Left>
@@ -33,8 +28,6 @@ export const SearchResults = ({predictions})=> {
 			</View>
 
 		);
-	
-		
 };
 
 export default SearchResults;
