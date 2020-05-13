@@ -1,5 +1,6 @@
 import React from "react";
 //import {  Left, Body } from  "native-base";
+
 import {Text, FlatList, ListItem,View, Left, Body, SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 
@@ -8,10 +9,10 @@ import styles from "./mapContainerStyles.js";
 import SearchBox from "../SearchBox";
 import SearchResult from "../SearchResults";
 
-export const MapContainer = ({region, getInputData, toggleSearchResultModal, getAddressPredictions, resultTypes, predictions})=>{
-
+export const MapContainer = ({region, getInputData, toggleSearchResultModal, getAddressPredictions, resultTypes, predictions, getSelectedAddress, selectedAddress})=>{ 
     return(
-        <View style={styles.container}> 
+        <View style={styles.container}>
+
             <MapView 
                 provider={MapView.PROVIDER_GOOGLE}
                 style={styles.map}
@@ -27,10 +28,11 @@ export const MapContainer = ({region, getInputData, toggleSearchResultModal, get
                 getInputData={getInputData} 
                 toggleSearchResultModal={toggleSearchResultModal}
                 getAddressPredictions={getAddressPredictions}
+                selectedAddress={selectedAddress}
             />
             {  (resultTypes.pickUp || resultTypes.dropOff) && (predictions.length >=1) &&
             
-            <SearchResult predictions={predictions}/>   //err         
+            <SearchResult predictions={predictions} getSelectedAddress={getSelectedAddress}/>   //err         
             }
         </View>
     )

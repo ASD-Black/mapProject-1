@@ -1,4 +1,5 @@
 import update from "react-addons-update"
+
 import constants from "./actionConstants"
 import { Dimensions } from "react-native"
 import RNGooglePlaces from "react-native-google-places"
@@ -11,8 +12,12 @@ const {
 	GET_CURRENT_LOCATION,
 	GET_INPUT,
 	TOGGLE_SEARCH_RESULT,
-	GET_ADDRESS_PREDICTIONS
+	GET_ADDRESS_PREDICTIONS,
+	GET_SELECTED_ADDRESS,
+	SET_LOCATION
 } = constants;
+
+
 
 
 const { width, height } = Dimensions.get("window");
@@ -69,6 +74,59 @@ export function getAddressPredictions(){
 			})
 		)
 		.catch((error)=> console.log(error.message));
+	};
+}
+
+export function getSelectedAddress(payload){
+	return(dispatch, store)=>{
+		RNGooglePlaces.lookUpPlaceByID(payload)
+		.then((results)=>{
+			dispatch({
+				type:GET_SELECTED_ADDRESS,
+				payload:results
+			})
+		})
+		.catch((error)=> console.log(error.message));
+	}
+}
+
+export function setLocation(){
+	return (dispatch, store)=>{
+		
+		fetch('http://192.168.8.100:3000/api/markTheLocations',{
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          },
+            body: JSON.stringify({
+				placeAdress:store().home.selectedAddress.selectedPickUp.address,
+				placeName:store().home.selectedAddress.selectedPickUp.name,
+				latitude:store().home.selectedAddress.selectedPickUp.location.latitude,
+				longitude:store().home.selectedAddress.selectedPickUp.location.longitude,
+				
+				action_status: "IN",
+				journey_status: "incom",
+				date: "2020-03-27 13:36:48",
+				RegNo: "IT16130326",
+				route:'fdvdvd'
+			})
+         
+        })
+        .then((response) => response.json())
+        .then((res) => {
+          
+          if(res.success === true){
+            
+            alert(res.succmessage);
+            
+          }
+          else if(res.success === false){
+              alert(res.errmessage);
+          }
+        })
+        .done();
+
 	};
 }
 
@@ -149,18 +207,47 @@ function handleGetAddressPredictions(state, action){
 	})
 }
 
+function handleGetSelectedAddress(state, action){
+	let selectedTitle = state.resultTypes.pickUp ? "selectedPickUp" : "selectedDropOff"
+	return update(state, {
+		selectedAddress:{
+			[selectedTitle]:{
+				$set:action.payload  
+			}	
+		},
+		resultTypes:{
+			pickUp:{
+				$set:false
+			},
+			dropOff:{
+				$set:false
+			}
+		} 
+	})
+}
+
+function handleSetLocation(state, action){
+	return update(state, {
+		setLoc:{
+			$set:action.payload
+		}
+	})
+}
+
 const ACTION_HANDLERS = {
 	GET_CURRENT_LOCATION:handleGetCurrentLocation,
 	GET_INPUT:handleGetInputDate,
 	TOGGLE_SEARCH_RESULT:handleToggleSearchResult,
-	GET_ADDRESS_PREDICTIONS:handleGetAddressPredictions
+	GET_ADDRESS_PREDICTIONS:handleGetAddressPredictions,
+	GET_SELECTED_ADDRESS:handleGetSelectedAddress,
+	SET_LOCATION:handleSetLocation
 }
 
 const initialState = {
 	region:{},
 	inputData:{},
-	resultTypes:{}
-	
+	resultTypes:{},
+	selectedAddress:{},
 }; 
 
 
@@ -169,4 +256,3 @@ export function HomeReducer (state = initialState, action){
 
 	return handler ? handler(state, action) : state;
 }
-
