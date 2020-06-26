@@ -4,7 +4,7 @@ import { View, Button } from "native-base";
 
 import styles from "./FabStyles.js";
 
-export const actionButton = ({onPressAction})=>{
+export const actionButton = ({onPressAction, route1})=>{
 	return (
 		<Button style={styles.fabContainer} onPress={onPressAction}>
 			<Text style={styles.btnText}> Book </Text>

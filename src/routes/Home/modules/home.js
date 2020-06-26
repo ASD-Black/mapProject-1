@@ -92,8 +92,9 @@ export function getSelectedAddress(payload){
 
 export function setLocation(){
 	return (dispatch, store)=>{
-		
-		fetch('http://192.168.8.100:3000/api/markTheLocations',{
+		console.log("store()")
+		console.log(store())
+		fetch('http://192.168.8.101:3000/api/markTheLocations',{
           method: 'POST',
           headers: {
               'Accept': 'application/json',
@@ -109,7 +110,7 @@ export function setLocation(){
 				journey_status: "incom",
 				date: "2020-03-27 13:36:48",
 				RegNo: "IT16130326",
-				route:'fdvdvd'
+				route: "Kolpity"
 			})
          
         })
